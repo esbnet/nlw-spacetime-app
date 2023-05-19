@@ -7,6 +7,9 @@ import {
   View,
 } from "react-native";
 
+import { useAuthRequest, makeRedirectUri } from 'expo-auth-session'
+import * as SecureStore from 'expo-secure-store';
+
 import {
   useFonts,
   Roboto_400Regular,
@@ -21,15 +24,52 @@ import Stripes from "./src/assets/stripes.svg";
 import NLWLogo from "./src/assets/nlw-spacetime-logo.svg";
 
 import { styled } from "nativewind";
+import { useEffect } from "react";
+import { api } from "./src/lib/api";
 
 const StyledStripes = styled(Stripes);
 
+// Endpoint
+const discovery = {
+  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+  tokenEndpoint: 'https://github.com/login/oauth/access_token',
+  revocationEndpoint: 'https://github.com/settings/connections/applications/f7319650946839d29f4f',
+};
+
 export default function App() {
+
+  const [request, response, signInWithGithub] = useAuthRequest(
+    {
+      clientId: 'f7319650946839d29f4f',
+      scopes: ['identity'],
+      redirectUri: makeRedirectUri({
+        scheme: 'nlwspacetime'
+      }),
+    },
+    discovery
+  );
+
   const [hasLoadedFonts] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
     BaiJamjuree_700Bold,
   });
+
+  useEffect(() => {
+
+    // console.log(makeRedirectUri({
+    //   scheme: 'nlwspacetime'
+    // }),)
+
+    if (response?.type === 'success') {
+      const { code } = response.params;
+
+      api.post('/register', {code}).then(response => {
+        const {token}=response.data
+        SecureStore.setItemAsync('st-token-app', token)
+      }).catch(err => { console.error(err)})
+    }
+  }, [response]);
 
   if (!hasLoadedFonts) return null;
 
@@ -53,7 +93,11 @@ export default function App() {
           </Text>
         </View>
 
-        <TouchableOpacity activeOpacity={0.7} className="rounded-full bg-green-500 px-5 py-2">
+        <TouchableOpacity 
+        activeOpacity={0.7} 
+        className="rounded-full bg-green-500 px-5 py-2"
+        onPress={()=>signInWithGithub()}
+        >
           <Text className="font-alt text-sm uppercase text-black leading-none">
             Cadastrar lembrança
           </Text>
