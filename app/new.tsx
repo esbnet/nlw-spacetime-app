@@ -9,16 +9,20 @@ import {
 } from "react-native";
 
 import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import Icon from "@expo/vector-icons/Feather";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState } from "react";
 
+import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
+import { api } from "../src/lib/api";
+
 
 export default function NewMemory() {
   const { bottom, top } = useSafeAreaInsets();
+  const router = useRouter()
 
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
@@ -37,12 +41,45 @@ export default function NewMemory() {
         setPreview(result.assets[0].uri);
       }
     } catch (error) {
-      console.log("erro: não conseguiu ler a imagem. "+ error)
+      console.log("erro: não conseguiu ler a imagem. " + error);
     }
   }
 
-  function hadleCreateMemory() {
-    console.log(content, setIsPublic);
+  async function hadleCreateMemory() {
+    const token = await SecureStore.getItemAsync("st-token-app");
+    let coverUrl = "";
+
+    if (preview) {
+      const uploadFormData = new FormData();
+
+      uploadFormData.append("file", {
+        uri: preview,
+        name: "image.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      const uploadResponse = await api.post("/upload", uploadFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      coverUrl = uploadResponse.data.fileUrl;
+    }
+
+    await api.post(
+      "/memories",
+      {
+        content,
+        isPublic,
+        coverUrl,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    router.push('/memories')
   }
 
   return (
@@ -98,6 +135,7 @@ export default function NewMemory() {
           multiline
           value={content}
           onChangeText={setContent}
+          textAlignVertical="top"
           className="rounded-sm border border-dashed border-gray-500 bg-black/10 p-1 font-body text-sm text-gray-50 "
           placeholderTextColor={"#565656"}
           placeholder="Fique livre para adicionar fotos, vídeos e relatos sobre essa experiência que você quer lembrar para sempre."
@@ -106,7 +144,6 @@ export default function NewMemory() {
           onPress={hadleCreateMemory}
           activeOpacity={0.7}
           className="items-center self-end rounded-full bg-green-500 px-5 py-2"
-          // onPress={() => signInWithGithub()}
         >
           <Text className="font-alt text-sm uppercase leading-none text-black">
             Salvar
