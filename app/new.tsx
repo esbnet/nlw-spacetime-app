@@ -27,6 +27,7 @@ export default function NewMemory() {
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [imageType, setImageType] = useState<string | null>(null);
 
   async function openImagePicker() {
     try {
@@ -39,6 +40,7 @@ export default function NewMemory() {
 
       if (result.assets[0]) {
         setPreview(result.assets[0].uri);
+        setImageType(result.assets[0].type)
       }
     } catch (error) {
       console.log("erro: não conseguiu ler a imagem. " + error);

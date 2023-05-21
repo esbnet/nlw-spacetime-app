@@ -1,8 +1,6 @@
 import {
   ScrollView,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Image,
@@ -16,7 +14,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 
 import * as SecureStore from "expo-secure-store";
-import * as ImagePicker from "expo-image-picker";
 import { api } from "../src/lib/api";
 import dayjs from "dayjs";
 import ptbr from 'dayjs/locale/pt-br'
@@ -43,15 +40,14 @@ export default function Memories() {
 
   async function loadMemories() {
     const token = await SecureStore.getItemAsync("st-token-app");
-
     const response = await api.get("/memories", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
     setMemories(response.data);
   }
+
   useEffect(() => {
     loadMemories();
   }, []);
