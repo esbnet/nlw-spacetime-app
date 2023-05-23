@@ -1,23 +1,23 @@
 import {
-  ScrollView,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Image,
+    Image,
+    ScrollView,
+    Switch,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
-import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
 import { Link, useRouter } from "expo-router";
+import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
 
 import Icon from "@expo/vector-icons/Feather";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
-import { api } from "../src/lib/api";
+import * as SecureStore from "expo-secure-store";
+import { api } from "../lib/api";
 
 
 export default function NewMemory() {

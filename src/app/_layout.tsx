@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import { styled } from "nativewind";
-import { StatusBar } from "expo-status-bar";
 import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { styled } from "nativewind";
+import { useEffect, useState } from "react";
 
-import { ImageBackground} from "react-native";
+import { ImageBackground } from "react-native";
 
-import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store';
 
+import { BaiJamjuree_700Bold } from "@expo-google-fonts/bai-jamjuree";
 import {
-  useFonts,
   Roboto_400Regular,
   Roboto_700Bold,
+  useFonts,
 } from "@expo-google-fonts/roboto";
-import { BaiJamjuree_700Bold } from "@expo-google-fonts/bai-jamjuree";
 
 import blurBg from "../src/assets/bg-blur.png";
 import Stripes from "../src/assets/stripes.svg";
@@ -59,12 +59,13 @@ export default function Layout() {
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: "transparent" },
-          animation: 'flip'
+          animation: 'slide_from_left'
         }}
       >
         <Stack.Screen name="index" redirect={isUserAuthenticated}/>
         <Stack.Screen name="memories"/>
         <Stack.Screen name="new"/>
+        <Stack.Screen name="detail"/>
       </Stack>
     </ImageBackground>
   );
