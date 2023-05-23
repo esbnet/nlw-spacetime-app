@@ -1,27 +1,23 @@
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { StatusBar } from "expo-status-bar";
 import { styled } from "nativewind";
 import { useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
-import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
-import * as SecureStore from "expo-secure-store";
-import { useRouter } from "expo-router";
 
-import {
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
-import {
-  useFonts,
-  Roboto_400Regular,
-  Roboto_700Bold,
-} from "@expo-google-fonts/roboto";
 import { BaiJamjuree_700Bold } from "@expo-google-fonts/bai-jamjuree";
+import {
+    Roboto_400Regular,
+    Roboto_700Bold,
+    useFonts,
+} from "@expo-google-fonts/roboto";
 
-import Stripes from "../src/assets/stripes.svg";
 import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
+import Stripes from "../src/assets/stripes.svg";
 
-import { api } from "../src/lib/api";
+import { api } from "../lib/api";
 
 const StyledStripes = styled(Stripes);
 
@@ -54,10 +50,10 @@ export default function App() {
   });
 
   async function handleGithubOAuthCode(code: string) {
-    const response = await api.post("/register", { code });
+    const response = await api.post("/register", { code, platform: 'app' });
     const { token } = response.data;
     await SecureStore.setItemAsync("st-token-app", token);
-    router.push('/memories')
+    router.push("/memories");
   }
 
   useEffect(() => {
@@ -73,7 +69,7 @@ export default function App() {
   if (!hasLoadedFonts) return null;
 
   return (
-    <View className="flex-1 items-center  px-8 py-10" >
+    <View className="flex-1 items-center  px-8 py-10">
       <View className="flex-1 items-center justify-center gap-6">
         <NLWLogo />
         <View className="space-y-2">

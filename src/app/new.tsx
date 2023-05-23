@@ -1,23 +1,23 @@
 import {
-  ScrollView,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Image,
+    Image,
+    ScrollView,
+    Switch,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
-import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
 import { Link, useRouter } from "expo-router";
+import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
 
 import Icon from "@expo/vector-icons/Feather";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
-import { api } from "../src/lib/api";
+import * as SecureStore from "expo-secure-store";
+import { api } from "../lib/api";
 
 
 export default function NewMemory() {
@@ -27,6 +27,7 @@ export default function NewMemory() {
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [imageType, setImageType] = useState<string | null>(null);
 
   async function openImagePicker() {
     try {
@@ -39,6 +40,7 @@ export default function NewMemory() {
 
       if (result.assets[0]) {
         setPreview(result.assets[0].uri);
+        setImageType(result.assets[0].type)
       }
     } catch (error) {
       console.log("erro: não conseguiu ler a imagem. " + error);
