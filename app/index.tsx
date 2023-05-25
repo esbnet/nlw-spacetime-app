@@ -9,15 +9,15 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 import { BaiJamjuree_700Bold } from "@expo-google-fonts/bai-jamjuree";
 import {
-    Roboto_400Regular,
-    Roboto_700Bold,
-    useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+  useFonts,
 } from "@expo-google-fonts/roboto";
 
 import NLWLogo from "../src/assets/nlw-spacetime-logo.svg";
 import Stripes from "../src/assets/stripes.svg";
 
-import { api } from "../lib/api";
+import { api } from "../src/lib/api";
 
 const StyledStripes = styled(Stripes);
 

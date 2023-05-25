@@ -52,7 +52,6 @@ export default function Layout() {
       imageStyle={{ position: "absolute", left: "-100%" }}
     >
       <StyledStripes className="absolute left-2" />
-
       <StatusBar style="light" translucent />
 
       <Stack

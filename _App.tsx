@@ -31,13 +31,6 @@ const discovery = {
     "https://github.com/settings/connections/applications/f7319650946839d29f4f",
 };
 
-type DataRequest = {
-  data: {
-    code: string;
-    platform: string;
-  };
-};
-
 export default function App() {
   const [request, response, signInWithGithub] = useAuthRequest(
     {
@@ -57,9 +50,9 @@ export default function App() {
   });
 
   useEffect(() => {
-    // console.log(makeRedirectUri({
-    //   scheme: 'nlwspacetime'
-    // }),)
+    console.log(makeRedirectUri({
+      scheme: 'nlwspacetime'
+    }),)
 
     if (response?.type === "success") {
       const { code } = response.params;
