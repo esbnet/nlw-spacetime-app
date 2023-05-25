@@ -17,17 +17,34 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
-import { api } from "../lib/api";
+import { api } from "../src/lib/api";
 
+type MemoryProps = {
+  content: string;
+  isPublic: string;
+  coverUrl: string;
+  createAt: string;
+};
 
-export default function NewMemory() {
+export default function EditMemory({ id: string }) {
   const { bottom, top } = useSafeAreaInsets();
-  const router = useRouter()
+  const router = useRouter();
 
   const [content, setContent] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageType, setImageType] = useState<string | null>(null);
+  const [memory, setMemory] = useState<MemoryProps | null>(null);
+
+  async function loadMemories(id: string) {
+    const token = await SecureStore.getItemAsync("st-token-app");
+    const response = await api.get("/update/" + id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setMemory(response.data);
+  }
 
   async function openImagePicker() {
     try {
@@ -40,14 +57,14 @@ export default function NewMemory() {
 
       if (result.assets[0]) {
         setPreview(result.assets[0].uri);
-        setImageType(result.assets[0].type)
+        setImageType(result.assets[0].type);
       }
     } catch (error) {
       console.log("erro: não conseguiu ler a imagem. " + error);
     }
   }
 
-  async function hadleCreateMemory() {
+  async function hadleEditMemory() {
     const token = await SecureStore.getItemAsync("st-token-app");
     let coverUrl = "";
 
@@ -69,19 +86,13 @@ export default function NewMemory() {
       coverUrl = uploadResponse.data.fileUrl;
     }
 
-    await api.post(
+    await api.put(
       "/memories",
-      {
-        content,
-        isPublic,
-        coverUrl,
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+      { content, isPublic, coverUrl },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    router.push('/memories')
+    router.push("/memories");
   }
 
   return (
@@ -143,7 +154,7 @@ export default function NewMemory() {
           placeholder="Fique livre para adicionar fotos, vídeos e relatos sobre essa experiência que você quer lembrar para sempre."
         />
         <TouchableOpacity
-          onPress={hadleCreateMemory}
+          onPress={hadleEditMemory}
           activeOpacity={0.7}
           className="items-center self-end rounded-full bg-green-500 px-5 py-2"
         >

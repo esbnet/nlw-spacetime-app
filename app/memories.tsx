@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import dayjs from "dayjs";
 import ptbr from "dayjs/locale/pt-br";
 import * as SecureStore from "expo-secure-store";
-import { api } from "../lib/api";
+import { api } from "../src/lib/api";
 
 dayjs.locale(ptbr);
 
